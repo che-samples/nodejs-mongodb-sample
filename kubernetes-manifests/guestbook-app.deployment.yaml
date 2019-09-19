@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: vsvydenko/node-guestbook-app
+        image: node-guestbook-app
         ports:
         - name: http-server
           containerPort: 8080

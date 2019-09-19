@@ -1,0 +1,51 @@
+################################################################################
+# WARNING: This MongoDB deployment is not suitable for production as the data is
+# not persistently stored and will go away every time the Pod restarts. Consider
+# using a Helm chart that provisions a StatefulSet instead of Deployment.
+################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: node-guestbook
+    tier: db
+  name: mongodb-34-centos7
+spec:
+  ports:
+    - port: 27017
+      targetPort: 27017
+  selector:
+    app: node-guestbook
+    tier: db
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mongodb-34-centos7
+  labels:
+    app: node-guestbook
+    tier: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-guestbook
+      tier: db
+  template:
+    metadata:
+      labels:
+        app: node-guestbook
+        tier: db
+    spec:
+      containers:
+        - name: mongo
+          image: centos/mongodb-34-centos7
+          env:
+            - name: MONGODB_USER
+              value: user
+            - name: MONGODB_PASSWORD
+              value: password
+            - name: MONGODB_DATABASE
+              value: guestbook
+            - name: MONGODB_ADMIN_PASSWORD
+              value: password

@@ -5,7 +5,8 @@
   "repository": "https://github.com/che-samples/nodejs-mongodb-sample",
   "main": "app.js",
   "scripts": {
-    "start": "node --inspect=9229 app.js "
+    "start": "node app.js",
+    "debug": "node --inspect=9229 app.js"
   },
   "license": "MIT",
   "dependencies": {

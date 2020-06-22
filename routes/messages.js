@@ -5,7 +5,7 @@
 
 const mongoose = require('mongoose')
 
-const mongoURI = "mongodb://user:password@mongodb-34-centos7:27017/guestbook"
+const mongoURI = "mongodb://user:password@mongodb:27017/guestbook"
 
 const db = mongoose.connection;
 

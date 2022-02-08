@@ -2,9 +2,9 @@ schemaVersion: 2.1.0
 metadata:
   name: nodejs-mongodb
 components:
-  - name: nodejs
+  - name: tools
     container:
-      image: quay.io/devfile/universal-developer-image:ubi8-b452131
+      image: quay.io/devfile/universal-developer-image:ubi8-0e189d9
       env:
       # The values below are used to set up the environment for running the application
         - name: SECRET
@@ -17,6 +17,7 @@ components:
           targetPort: 8080
       memoryLimit: 1G
       mountSources: true
+
   - name: mongo
     container:
       image: quay.io/eclipse/che--centos--mongodb-36-centos7:latest-a915db7beca87198fcd7860086989fe8a327a1a4f6508025b64ab28fcc7423b2
@@ -40,15 +41,17 @@ components:
       volumeMounts:
         - name: mongo-storage
           path: /var/lib/mongodb/data
+
   - name: mongo-storage
     volume:
-      size: 1G
+      size: 256Mi
+
 commands:
-  - id: runapp
+  - id: run-application
     exec:
       label: "Run the application"
-      component: nodejs
-      workingDir: ${PROJECTS_ROOT}/nodejs-mongodb-sample
+      component: tools
+      workingDir: ${PROJECT_SOURCE}
       commandLine: "npm install && node --inspect=9229 app.js"
       group:
         kind: run

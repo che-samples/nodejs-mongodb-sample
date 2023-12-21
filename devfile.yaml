@@ -15,6 +15,7 @@ components:
         - exposure: public
           name: nodejs
           targetPort: 8080
+          protocol: https
       memoryLimit: 1G
       mountSources: true
 

@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
         - name: mongo
-          image: bitnami/mongodb:6.0
+          image: bitnami/mongodb:8.0.8
           env:
             - name: MONGODB_USERNAME
               value: user

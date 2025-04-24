@@ -7,7 +7,7 @@ The application connects to the Mongo data base, so it should be configured with
 - MongoDB password - <b>password</b>
 - The name of data base - <b>guestbook</b>
 
-# Deploy the application on Kubernetes cluster by kubectl command-line tool
+# Deploy the application on Kubernetes cluster by oc or kubectl command-line tool
 - Before you begin you need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster
 - Deploy MongoDB:
 		`kubectl apply -f ./kubernetes-manifests/mongo.deployment.yaml`

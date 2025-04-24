@@ -4,7 +4,7 @@ metadata:
 components:
   - name: tools
     container:
-      image: quay.io/devfile/universal-developer-image:ubi8-latest
+      image: quay.io/devfile/universal-developer-image:ubi9-latest
       env:
       # The values below are used to set up the environment for running the application
         - name: SECRET
@@ -21,15 +21,15 @@ components:
 
   - name: mongo
     container:
-      image: quay.io/eclipse/che--centos--mongodb-36-centos7:latest-a915db7beca87198fcd7860086989fe8a327a1a4f6508025b64ab28fcc7423b2
+      image: bitnami/mongodb:6.0
       env:
-        - name: MONGODB_USER
+        - name: MONGODB_USERNAME
           value: user
         - name: MONGODB_PASSWORD
           value: password
         - name: MONGODB_DATABASE
           value: guestbook
-        - name: MONGODB_ADMIN_PASSWORD
+        - name: MONGODB_ROOT_PASSWORD
           value: password
       endpoints:
         - name: mongodb
@@ -41,7 +41,7 @@ components:
       mountSources: true
       volumeMounts:
         - name: mongo-storage
-          path: /var/lib/mongodb/data
+          path: /bitnami/mongodb
 
   - name: mongo-storage
     volume:

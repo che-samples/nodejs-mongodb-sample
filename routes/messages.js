@@ -5,14 +5,13 @@
 
 const mongoose = require('mongoose')
 
-const mongoURI = "mongodb://user:password@localhost:27017/guestbook"
-
+const mongoURI = process.env.MONGODB_URI || 'mongodb://user:password@localhost:27017/guestbook';
 const db = mongoose.connection;
 
 db.on('disconnected', () => {
-    console.error(`Disconnected: unable to reconnect to ${mongoURI}`)
-    throw new Error(`Disconnected: unable to reconnect to ${mongoURI}`) 
-})
+    console.error(`Disconnected: unable to reconnect to ${mongoURI}`);
+    throw new Error(`Disconnected: unable to reconnect to ${mongoURI}`);
+});
 db.on('error', (err) => {
     console.error(`Unable to connect to ${mongoURI}: ${err}`);
 });
@@ -22,11 +21,14 @@ db.once('open', () => {
 });
 
 const connectToMongoDB = async () => {
-    await mongoose.connect(mongoURI, {
-        useNewUrlParser: true,
-        connectTimeoutMS: 2000,
-        reconnectTries: 1
-    })
+    try {
+        await mongoose.connect(mongoURI, {
+            connectTimeoutMS: 2000
+        });
+    } catch (err) {
+        console.error('Error connecting to MongoDB:', err);
+        throw err;
+    }
 };
 
 const messageSchema = mongoose.Schema({
@@ -38,28 +40,32 @@ const messageSchema = mongoose.Schema({
 const messageModel = mongoose.model('Message', messageSchema);
 
 const construct = (params) => {
-    const name = params.name
-    const body = params.body
-    const message = new messageModel({ name: name, body: body })
-    return message
+    const name = params.name;
+    const body = params.body;
+    const message = new messageModel({ name: name, body: body });
+    return message;
 };
 
-const save = (message) => {
-    console.log("saving message...")
-    message.save((err) => {
-        if (err) { throw err }
-    })
+const save = async (message) => {
+    try {
+        console.log("saving message...");
+        await message.save();  // Save asynchronously
+    } catch (err) {
+        console.error("Error saving message:", err);
+        throw err;
+    }
 };
 
 // Constructs and saves message
-const create = (params) => {
+const create = async (params) => {
     try {
-        const msg = construct(params)
-        const validationError = msg.validateSync()
-        if (validationError) { throw validationError }
-        save(msg)
+        const msg = construct(params);
+        const validationError = msg.validateSync();
+        if (validationError) { throw validationError; }
+        await save(msg);  // Ensure save is awaited
     } catch (error) {
-        throw error
+        console.error("Error in create method:", error);
+        throw error;
     }
 }
 
@@ -68,4 +74,3 @@ module.exports = {
     messageModel: messageModel,
     connectToMongoDB: connectToMongoDB
 }
-

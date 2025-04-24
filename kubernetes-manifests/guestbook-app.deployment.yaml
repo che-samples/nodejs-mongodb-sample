@@ -1,7 +1,4 @@
 #--------------------------------------------------------------------------------------------
-#  Copyright (c) Red Hat, Inc. All rights reserved.
-#  Licensed under the MIT License. See LICENSE in the project root for license information.
-#--------------------------------------------------------------------------------------------
 
 apiVersion: v1
 kind: Service
@@ -11,13 +8,13 @@ metadata:
     app: node-guestbook
     tier: frontend
 spec:
-  type: LoadBalancer
   selector:
     app: node-guestbook
     tier: frontend
   ports:
-    - port: 80
-      targetPort: http-server
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -40,10 +37,29 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: quay.io/eclipse/che-nodejs10-ubi:nightly
+        image: registry.access.redhat.com/ubi9/nodejs-18:9.5-1742967160
         command: ['/bin/sh', '-c']
-        args: ['cd /home && git clone https://github.com/che-samples/nodejs-mongodb-sample.git && cd nodejs-mongodb-sample/ && npm install && npm start']
+        args: ['cd /opt/app-root/src && git clone https://github.com/che-samples/nodejs-mongodb-sample.git && cd nodejs-mongodb-sample/ && npm install && npm start']
         imagePullPolicy: Always
+        env:
+        - name: MONGODB_URI
+          value: mongodb://user:password@mongo:27017/guestbook
         ports:
-        - name: http-server
+        - name: http
           containerPort: 8080
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: node-guestbook-app
+  labels:
+    app: node-guestbook
+spec:
+  to:
+    kind: Service
+    name: node-guestbook-app
+  port:
+    targetPort: 8080-tcp
+  tls:
+    termination: edge
+  wildcardPolicy: None

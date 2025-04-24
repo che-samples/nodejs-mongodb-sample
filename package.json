@@ -10,13 +10,13 @@
   },
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^1.8.4",
     "body-parser": "^1.18.3",
+    "eslint": "^5.16.0",
     "express": "^4.16.4",
     "moment": "^2.24.0",
-    "pug": "^2.0.3",
-    "eslint": "^5.16.0",
-    "mongodb": "^3.2.2",
-    "mongoose": "^5.4.20"
+    "mongodb": "^6.16.0",
+    "mongoose": "^8.13.2",
+    "pug": "^3.0.3"
   }
 }

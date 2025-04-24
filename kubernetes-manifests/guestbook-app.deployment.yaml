@@ -11,7 +11,6 @@ metadata:
     app: node-guestbook
     tier: frontend
 spec:
-  type: LoadBalancer
   selector:
     app: node-guestbook
     tier: frontend
@@ -40,10 +39,13 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: quay.io/eclipse/che-nodejs10-ubi:nightly
+        image: registry.access.redhat.com/ubi9/nodejs-18:9.5-1742967160
         command: ['/bin/sh', '-c']
-        args: ['cd /home && git clone https://github.com/che-samples/nodejs-mongodb-sample.git && cd nodejs-mongodb-sample/ && npm install && npm start']
+        args: ['cd /opt/app-root/src && git clone https://github.com/che-samples/nodejs-mongodb-sample.git && cd nodejs-mongodb-sample/ && npm install && npm start']
         imagePullPolicy: Always
+        env:
+        - name: MONGODB_URI
+          value: mongodb://user:password@mongo:27017/guestbook
         ports:
         - name: http-server
           containerPort: 8080
